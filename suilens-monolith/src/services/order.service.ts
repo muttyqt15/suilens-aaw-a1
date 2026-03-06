@@ -53,6 +53,33 @@ export const OrderService = {
     return results[0] || null;
   },
 
+  async cancelOrder(id: string) {
+    return db.transaction(async (tx) => {
+      const [order] = await tx.select().from(orders).where(eq(orders.id, id));
+      if (!order) {
+        throw new Error('Order not found');
+      }
+      if (order.status === 'cancelled') {
+        throw new Error('Order is already cancelled');
+      }
+
+      const [updated] = await tx
+        .update(orders)
+        .set({ status: 'cancelled' })
+        .where(eq(orders.id, id))
+        .returning();
+
+      await tx.insert(notifications).values({
+        orderId: order.id,
+        type: 'order_cancelled',
+        recipient: order.customerEmail,
+        message: `Hi ${order.customerName}, your order ${order.id} has been cancelled.`,
+      });
+
+      return updated;
+    });
+  },
+
   async getAllOrders() {
     return db.select().from(orders);
   },

@@ -28,4 +28,13 @@ export const orderRoutes = new Elysia({ prefix: '/api/orders' })
       return new Response(JSON.stringify({ error: 'Order not found' }), { status: 404 });
     }
     return order;
+  })
+  .patch('/:id/cancel', async ({ params }) => {
+    try {
+      const order = await OrderService.cancelOrder(params.id);
+      return order;
+    } catch (error: any) {
+      const status = error.message.includes('not found') ? 404 : 400;
+      return new Response(JSON.stringify({ error: error.message }), { status });
+    }
   });
