@@ -143,6 +143,22 @@ Stock reservation menggunakan synchronous HTTP untuk menjamin konsistensi — us
 
 Dead Letter Queue (DLQ) digunakan untuk menangani pesan yang gagal diproses setelah beberapa kali retry, mencegah infinite loop dan memungkinkan investigasi manual.
 
+## Asumsi Implementasi
+
+- Monolith tidak memiliki konsep multi-cabang (branch) karena inventory management bukan bagian dari arsitektur monolith pada tutorial. Microservices mendukung multi-cabang (KB-JKT-S, KB-JKT-E, KB-JKT-N).
+- Cancel order pada monolith bersifat sederhana (update status + insert notification dalam satu transaksi). Pada microservices, cancel memicu event `order.cancelled` yang dikonsumsi oleh Inventory Service (release stock) dan Notification Service secara asinkron.
+- Seed data otomatis bersifat idempoten — tidak akan duplikat jika container di-restart.
+- Frontend hanya disediakan untuk arsitektur microservices sesuai tutorial. Monolith diuji via API (curl/Postman).
+
+## Disclosure Penggunaan AI
+
+Pengerjaan tugas ini dibantu oleh AI (Claude) untuk:
+- Scaffolding awal kode boilerplate (Dockerfile, docker-compose, schema setup)
+- Pembuatan diagram arsitektur (React component, kemudian di-screenshot)
+- Review dan debugging konfigurasi Docker Compose
+
+Semua kode telah diverifikasi, diuji, dan dipahami oleh pembuat. Diagram arsitektur dibuat berdasarkan pemahaman manual terlebih dahulu, kemudian dirapikan menggunakan AI dan diverifikasi ulang.
+
 ## Tech Stack
 
 - **Runtime**: Bun 1.3
