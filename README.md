@@ -25,56 +25,6 @@ Tunggu ~30 detik, lalu buka [http://localhost:5173](http://localhost:5173).
 
 Semua schema database, seed data, dan migrasi dijalankan otomatis saat startup.
 
-## Arsitektur
-
-```mermaid
-graph TB
-    subgraph Frontend
-        FE[Vue 3 Frontend<br/>:5173]
-    end
-
-    subgraph API Gateway
-        NG[Nginx Reverse Proxy<br/>:80]
-    end
-
-    subgraph Services
-        CS[Catalog Service<br/>:3001]
-        OS[Order Service<br/>:3002]
-        NS[Notification Service<br/>:3003]
-        IS[Inventory Service<br/>:3004]
-    end
-
-    subgraph Databases
-        CDB[(catalog-db<br/>PostgreSQL :5433)]
-        ODB[(order-db<br/>PostgreSQL :5434)]
-        NDB[(notification-db<br/>PostgreSQL :5435)]
-        IDB[(inventory-db<br/>PostgreSQL :5436)]
-    end
-
-    subgraph Message Broker
-        RMQ[RabbitMQ<br/>:5672 / :15672]
-    end
-
-    FE --> NG
-    NG -->|/api/lenses| CS
-    NG -->|/api/orders| OS
-    NG -->|/api/inventory| IS
-
-    CS --> CDB
-    OS --> ODB
-    NS --> NDB
-    IS --> IDB
-
-    OS -->|HTTP sync: GET /api/lenses/:id| CS
-    OS -->|HTTP sync: POST /api/inventory/reserve| IS
-
-    OS -->|publish: order.placed| RMQ
-    OS -->|publish: order.cancelled| RMQ
-    RMQ -->|consume: order.placed| NS
-    RMQ -->|consume: order.cancelled| IS
-    RMQ -->|consume: order.cancelled| NS
-```
-
 ## Daftar Service dan Port
 
 | Service | Port | Keterangan |
