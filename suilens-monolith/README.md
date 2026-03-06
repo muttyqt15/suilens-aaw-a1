@@ -11,14 +11,7 @@ Monolith implementation untuk sistem rental lensa kamera **Studio Komet Biru**.
 docker compose up --build -d
 ```
 
-Tunggu hingga container `app` dan `db` berjalan, lalu push schema dan seed:
-
-```bash
-docker compose exec app bun run drizzle-kit push
-docker compose exec app bun run src/db/seed.ts
-```
-
-Aplikasi berjalan di [http://localhost:3000](http://localhost:3000).
+Semua schema database, seed data, dan migrasi dijalankan otomatis saat startup. Aplikasi berjalan di [http://localhost:3000](http://localhost:3000).
 
 ## Tech Stack
 

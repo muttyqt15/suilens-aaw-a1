@@ -64,10 +64,17 @@ async function seed() {
   console.log('Seeding lenses...');
   await db.insert(lenses).values(seedLenses);
   console.log(`Seeded ${seedLenses.length} lenses.`);
-  process.exit(0);
 }
 
-seed().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+// Run directly if called as script
+const isMain = import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('seed.ts');
+if (isMain) {
+  seed()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+}
+
+export { seed };
