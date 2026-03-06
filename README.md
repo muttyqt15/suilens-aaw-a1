@@ -10,6 +10,22 @@ Sistem rental lensa kamera untuk **Studio Komet Biru**, diimplementasikan dalam 
 | **Monolith** | `suilens-monolith/` | 3000 | Lihat `suilens-monolith/README.md` |
 | **Microservices** | `suilens-microservices/` | 5173 (frontend) | Lihat di bawah |
 
+## Diagram Arsitektur
+
+> Diagram awal dibuat secara manual berdasarkan pemahaman arsitektur, kemudian dirapikan menggunakan AI (React component) dan diverifikasi ulang oleh pembuat.
+
+### Side-by-Side Comparison
+
+![Architecture Comparison](docs/architecture-both.png)
+
+### Monolith
+
+![Monolith Architecture](docs/architecture-monolith.png)
+
+### Microservices
+
+![Microservices Architecture](docs/architecture-microservices.png)
+
 ---
 
 ## Microservices
